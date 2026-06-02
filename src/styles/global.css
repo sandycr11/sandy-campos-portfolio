@@ -24,8 +24,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   /* Subtle editor "grid" atmosphere */
   background-image:
-    radial-gradient(900px 600px at 100% -10%, rgba(0, 122, 204, 0.08), transparent 60%),
-    radial-gradient(700px 500px at -10% 110%, rgba(78, 201, 176, 0.06), transparent 60%);
+    radial-gradient(900px 600px at 100% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, var(--glow-2), transparent 60%);
   background-attachment: fixed;
 }
 
@@ -56,27 +56,37 @@ code,
 }
 
 ::selection {
-  background: var(--accent-glow);
-  color: #fff;
+  background: var(--selection-bg);
+  color: var(--selection-fg);
+}
+
+/* Smooth the dark ⇄ light theme swap on color surfaces only.
+   (Components with their own `transition` shorthand keep their behavior.) */
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color;
+  transition-duration: 0.28s;
+  transition-timing-function: var(--ease);
 }
 
 /* ── Scrollbars (editor style) ──────────────────────────────────────────── */
 * {
   scrollbar-width: thin;
-  scrollbar-color: #4a4a4a transparent;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
 }
 *::-webkit-scrollbar {
   width: 12px;
   height: 12px;
 }
 *::-webkit-scrollbar-thumb {
-  background: #424242;
+  background: var(--scrollbar-thumb);
   border: 3px solid transparent;
   background-clip: content-box;
   border-radius: 8px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: var(--scrollbar-thumb-hover);
   background-clip: content-box;
 }
 
@@ -138,7 +148,7 @@ code,
    ───────────────────────────────────────────────────────────────────────── */
 .section {
   scroll-margin-top: 84px;
-  margin-bottom: 3.25rem;
+  margin-bottom: 4.75rem;
 }
 
 .section__label {

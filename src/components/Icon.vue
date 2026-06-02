@@ -95,5 +95,26 @@ defineProps({ name: { type: String, required: true } })
     <template v-else-if="name === 'close'">
       <path d="M18 6 6 18M6 6l12 12" />
     </template>
+
+    <!-- UI controls / command palette -->
+    <template v-else-if="name === 'sun'">
+      <circle cx="12" cy="12" r="4" />
+      <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
+    </template>
+    <template v-else-if="name === 'moon'">
+      <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
+    </template>
+    <template v-else-if="name === 'command'">
+      <path d="M9 6a3 3 0 1 0-3 3h12a3 3 0 1 0-3-3v12a3 3 0 1 0 3-3H6a3 3 0 1 0 3 3z" />
+    </template>
+    <template v-else-if="name === 'terminal'">
+      <rect x="3" y="4" width="18" height="16" rx="2" /><path d="m7 9 3 3-3 3M13 15h4" />
+    </template>
+    <template v-else-if="name === 'return'">
+      <path d="M9 10 4 15l5 5" /><path d="M20 4v7a4 4 0 0 1-4 4H4" />
+    </template>
+    <template v-else-if="name === 'chevron'">
+      <path d="m9 18 6-6-6-6" />
+    </template>
   </svg>
 </template>

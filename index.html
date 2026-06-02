@@ -23,6 +23,20 @@
     <title>Sandy Campos — Senior Full Stack Software Engineer</title>
   </head>
   <body>
+    <!-- Set the theme before first paint to avoid a flash of the wrong theme. -->
+    <script>
+      (function () {
+        try {
+          var t = localStorage.getItem('scp-theme')
+          document.documentElement.setAttribute(
+            'data-theme',
+            t === 'light' || t === 'dark' ? t : 'dark',
+          )
+        } catch (e) {
+          document.documentElement.setAttribute('data-theme', 'dark')
+        }
+      })()
+    </script>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
   </body>

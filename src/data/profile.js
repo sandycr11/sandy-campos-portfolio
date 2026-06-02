@@ -6,6 +6,9 @@ export const profile = {
   email: 'sandycr11@gmail.com',
   linkedin: 'https://linkedin.com/in/sandycr11',
   github: 'https://github.com/sandycr11',
+  // Drop a photo in /public (e.g. avatar.jpg) and set this to
+  // `${import.meta.env.BASE_URL}avatar.jpg` to replace the monogram.
+  avatar: '',
   summary:
     'Senior Full Stack Software Engineer focused on building reliable business applications, APIs, backend services, legacy modernization, production systems, and AI-assisted workflows.',
 }

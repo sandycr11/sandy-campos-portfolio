@@ -1,39 +1,24 @@
+// Side projects built outside work hours — kept intentionally brief.
 export const projects = [
   {
-    name: 'ABAIntake Platform',
-    type: 'Personal Project',
+    name: 'ABAIntake',
+    url: 'https://abaintake.com',
     description:
-      'ABA therapy case management platform with AI-assisted note processing, structured data extraction, authentication, GraphQL APIs, and production-style deployment.',
-    stack: ['KeystoneJS', 'GraphQL', 'Prisma', 'MySQL', 'Nuxt 3', 'OpenAI API'],
-    highlights: [
-      'Built KeystoneJS backend with Prisma and MySQL.',
-      'Implemented GraphQL APIs, authentication, sessions, and Apollo integration.',
-      'Integrated OpenAI API workflows to extract structured information from unstructured notes.',
-      'Deployed using Linux, Apache reverse proxy, SSL, DNS, and environment configuration.',
-    ],
+      'ABA-therapy intake & case-management platform with AI-assisted extraction of structured data from clinical notes.',
+    stack: ['Nuxt 3', 'React', 'KeystoneJS', 'GraphQL', 'Prisma', 'OpenAI API'],
   },
   {
     name: 'SeOferta',
-    type: 'Personal Project',
+    url: 'https://seoferta.net',
     description:
-      'Personal web platform built with Express.js, MongoDB, and Vue.js, hosted on AWS.',
-    stack: ['Express.js', 'MongoDB', 'Vue.js', 'AWS'],
-    highlights: [
-      'Built REST API endpoints and data models.',
-      'Implemented frontend/backend separation.',
-      'Hosted and configured the application on AWS.',
-    ],
+      'Deals & offers web platform with a REST API backend and a decoupled frontend, hosted on AWS.',
+    stack: ['Vue.js', 'Express.js', 'MongoDB', 'AWS'],
   },
   {
     name: 'BaratieApp',
-    type: 'Personal Project',
+    url: 'https://baratieapp.com',
     description:
-      'Restaurant management application for orders, inventory control, and operational workflows.',
-    stack: ['Full Stack', 'Orders', 'Inventory', 'Business Workflows'],
-    highlights: [
-      'Designed workflows for restaurant operations.',
-      'Focused on order management and inventory control.',
-      'Applied full stack thinking to a real business-style problem.',
-    ],
+      'Restaurant management suite — a Flutter mobile app, a Laravel API backend, and a Vue.js web app for orders and inventory.',
+    stack: ['Flutter', 'Laravel', 'Vue.js', 'REST APIs'],
   },
 ]

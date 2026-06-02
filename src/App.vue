@@ -2,15 +2,16 @@
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 
 import AppShell from './components/AppShell.vue'
-import Sidebar from './components/Sidebar.vue'
 import EditorTabs from './components/EditorTabs.vue'
 import SectionCard from './components/SectionCard.vue'
 import CodeBlock from './components/CodeBlock.vue'
 import SkillBadge from './components/SkillBadge.vue'
 import MetricCard from './components/MetricCard.vue'
 import ProjectCard from './components/ProjectCard.vue'
+import CommandPalette from './components/CommandPalette.vue'
 import Icon from './components/Icon.vue'
 
+import { useTheme } from './composables/useTheme.js'
 import { profile, techStack, stackCategoryMeta } from './data/profile.js'
 import { experience } from './data/experience.js'
 import { aiLeverage, aiMetrics } from './data/aiLeverage.js'
@@ -19,23 +20,100 @@ import { projects } from './data/projects.js'
 // Resume path — drop resume.pdf into /public to make this live.
 const RESUME_URL = `${import.meta.env.BASE_URL}resume.pdf`
 
+// Code language shown per section: C# (Sandy's strongest stack) for backend /
+// profile / experience, TypeScript where the work is frontend / AI-flavored.
 const tabs = [
-  { id: 'profile', file: 'profile.ts' },
-  { id: 'stack', file: 'stack.ts' },
-  { id: 'experience', file: 'experience.ts' },
-  { id: 'ai', file: 'ai-leverage.ts' },
-  { id: 'projects', file: 'projects.ts' },
-  { id: 'contact', file: 'contact.ts' },
+  { id: 'profile', file: 'Profile.cs', label: 'Profile', lang: 'C#' },
+  { id: 'stack', file: 'TechStack.cs', label: 'Tech Stack', lang: 'C#' },
+  { id: 'experience', file: 'Experience.cs', label: 'Experience', lang: 'C#' },
+  { id: 'ai', file: 'ai-leverage.ts', label: 'AI Leverage', lang: 'TS' },
+  { id: 'projects', file: 'projects.ts', label: 'Projects', lang: 'TS' },
+  { id: 'contact', file: 'contact.sql', label: 'Contact', lang: 'SQL' },
 ]
 
+const langNames = { 'C#': 'C#', TS: 'TypeScript', SQL: 'SQL' }
+
 const active = ref('profile')
-const activeFile = computed(
-  () => tabs.find((t) => t.id === active.value)?.file ?? 'profile.ts',
+const activeTab = computed(
+  () => tabs.find((t) => t.id === active.value) ?? tabs[0],
 )
+const activeFile = computed(() => activeTab.value.file)
+const activeLang = computed(() => langNames[activeTab.value.lang] ?? 'TypeScript')
+
+const monogram = profile.name
+  .split(' ')
+  .map((w) => w[0])
+  .join('')
 
 function go(id) {
   const el = document.getElementById(`s-${id}`)
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+}
+
+// ── Command palette ───────────────────────────────────────────────────────
+const { theme, toggle: toggleTheme } = useTheme()
+const paletteOpen = ref(false)
+const openExternal = (url) => window.open(url, '_blank', 'noopener')
+
+const commands = computed(() => [
+  ...tabs.map((t) => ({
+    id: `go-${t.id}`,
+    group: 'Go to section',
+    label: t.label,
+    hint: t.file,
+    icon: 'file',
+    run: () => go(t.id),
+  })),
+  {
+    id: 'theme',
+    group: 'Preferences',
+    label: `Switch to ${theme.value === 'dark' ? 'light' : 'dark'} theme`,
+    hint: theme.value,
+    icon: theme.value === 'dark' ? 'sun' : 'moon',
+    run: toggleTheme,
+  },
+  {
+    id: 'resume',
+    group: 'Actions',
+    label: 'Download résumé',
+    hint: 'resume.pdf',
+    icon: 'download',
+    run: () => openExternal(RESUME_URL),
+  },
+  {
+    id: 'email',
+    group: 'Actions',
+    label: 'Email Sandy',
+    hint: profile.email,
+    icon: 'mail',
+    run: () => {
+      window.location.href = `mailto:${profile.email}`
+    },
+  },
+  {
+    id: 'linkedin',
+    group: 'Links',
+    label: 'Open LinkedIn',
+    hint: 'external',
+    icon: 'linkedin',
+    run: () => openExternal(profile.linkedin),
+  },
+  {
+    id: 'github',
+    group: 'Links',
+    label: 'Open GitHub',
+    hint: 'external',
+    icon: 'github',
+    run: () => openExternal(profile.github),
+  },
+])
+
+function onGlobalKey(e) {
+  const k = e.key.toLowerCase()
+  if ((e.metaKey || e.ctrlKey) && (k === 'p' || k === 'k')) {
+    e.preventDefault()
+    paletteOpen.value = true
+  }
 }
 
 const stackCats = Object.keys(techStack).map((key) => ({
@@ -77,40 +155,58 @@ onMounted(() => {
     el.classList.add('pre-view')
     revealer.observe(el)
   })
+
+  window.addEventListener('keydown', onGlobalKey)
 })
 onBeforeUnmount(() => {
   spy && spy.disconnect()
   revealer && revealer.disconnect()
+  window.removeEventListener('keydown', onGlobalKey)
 })
 </script>
 
 <template>
-  <AppShell :active-file="activeFile">
-    <!-- SIDEBAR -->
-    <template #sidebar>
-      <Sidebar :tabs="tabs" :active="active" @navigate="go" />
-    </template>
-
+  <AppShell
+    :active-file="activeFile"
+    :active-lang="activeLang"
+    @open-palette="paletteOpen = true"
+  >
     <!-- TABS -->
     <template #tabs>
       <EditorTabs :tabs="tabs" :active="active" @select="go" />
     </template>
 
-    <!-- EDITOR CONTENT -->
+    <!-- EDITOR CONTENT (constrained to a comfortable reading column) -->
+    <div class="page">
     <!-- ══════════════════ 1 · PROFILE / HERO ══════════════════ -->
     <section id="s-profile" data-id="profile" class="section hero">
       <div class="hero__grid">
         <div class="hero__intro reveal">
-          <p class="eyebrow">// senior full stack software engineer</p>
-          <h1 class="hero__name">
-            {{ profile.name }}<span class="hero__caret">|</span>
-          </h1>
-          <p class="hero__role mono">
-            <span class="tok-key">const</span>
-            <span class="tok-prop"> role</span>
-            <span class="tok-punct"> = </span>
-            <span class="tok-str">"{{ profile.role }}"</span>
-          </p>
+          <div class="hero__head">
+            <div class="hero__avatar mono">
+              <img v-if="profile.avatar" :src="profile.avatar" :alt="profile.name" />
+              <span v-else>{{ monogram }}</span>
+            </div>
+            <div class="hero__headtext">
+              <h1 class="hero__name">
+                {{ profile.name }}<span class="hero__caret">|</span>
+              </h1>
+              <p class="hero__role mono">{{ profile.role }}</p>
+            </div>
+          </div>
+
+          <div class="hero__meta mono">
+            <span class="hero__badge">
+              <span class="hero__pulse" /> Available for opportunities
+            </span>
+            <span class="hero__meta-item">
+              <Icon name="pin" /> {{ profile.location }}
+            </span>
+            <span class="hero__meta-item">
+              <Icon name="bolt" /> {{ profile.experience }} experience
+            </span>
+          </div>
+
           <p class="hero__summary">{{ profile.summary }}</p>
 
           <div class="hero__stats">
@@ -128,6 +224,21 @@ onBeforeUnmount(() => {
             </div>
           </div>
 
+        </div>
+
+        <div class="hero__code reveal" style="animation-delay: 0.12s">
+          <CodeBlock caption="// Profile.cs">
+            <span class="cl"><span class="tok-key">public class</span> <span class="tok-type">Profile</span></span>
+            <span class="cl"><span class="tok-punct">{</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Name</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.name }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Role</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.role }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Location</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.location }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Experience</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.experience }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Email</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.email }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public bool</span> <span class="tok-prop">Available</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-key">true</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="tok-punct">}</span></span>
+          </CodeBlock>
+
           <div class="hero__cta">
             <a class="btn btn--primary" :href="RESUME_URL" target="_blank" rel="noopener">
               <Icon name="download" /> Download Résumé
@@ -143,28 +254,13 @@ onBeforeUnmount(() => {
             </a>
           </div>
         </div>
-
-        <div class="hero__code reveal" style="animation-delay: 0.12s">
-          <CodeBlock caption="// profile.ts">
-            <span class="cl"><span class="tok-key">export const</span> <span class="tok-prop">profile</span> <span class="tok-punct">= {</span></span>
-            <span class="cl"><span class="indent" />name<span class="tok-punct">:</span> <span class="tok-str">"{{ profile.name }}"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" />role<span class="tok-punct">:</span> <span class="tok-str">"Senior Full Stack Engineer"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" />location<span class="tok-punct">:</span> <span class="tok-str">"{{ profile.location }}"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" />experience<span class="tok-punct">:</span> <span class="tok-str">"{{ profile.experience }}"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" />email<span class="tok-punct">:</span> <span class="tok-str">"{{ profile.email }}"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" />linkedin<span class="tok-punct">:</span> <span class="tok-str">"/in/sandycr11"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" />github<span class="tok-punct">:</span> <span class="tok-str">"/sandycr11"</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="indent" /><span class="tok-prop">available</span><span class="tok-punct">:</span> <span class="tok-key">true</span><span class="tok-punct">,</span></span>
-            <span class="cl"><span class="tok-punct">}</span></span>
-          </CodeBlock>
-        </div>
       </div>
     </section>
 
     <!-- ══════════════════ 2 · TECH STACK ══════════════════ -->
     <section id="s-stack" data-id="stack" class="section">
       <div class="section__label"><span class="dot" /> 02 — Tech Stack</div>
-      <SectionCard file="stack.ts" title="Technical Stack" hint="// tools I reach for">
+      <SectionCard file="TechStack.cs" title="Technical Stack" hint="// tools I reach for">
         <p class="lead">
           A full-stack toolkit spanning backend services, modern frontends, data,
           cloud, and AI tooling — chosen for reliability in production.
@@ -192,7 +288,7 @@ onBeforeUnmount(() => {
     <!-- ══════════════════ 3 · EXPERIENCE ══════════════════ -->
     <section id="s-experience" data-id="experience" class="section">
       <div class="section__label"><span class="dot" /> 03 — Experience</div>
-      <SectionCard file="experience.ts" title="Work Experience" hint="// experience[]">
+      <SectionCard file="Experience.cs" title="Work Experience" hint="// List<Experience>">
         <div class="timeline">
           <div
             v-for="(job, i) in experience"
@@ -290,10 +386,14 @@ onBeforeUnmount(() => {
       </SectionCard>
     </section>
 
-    <!-- ══════════════════ 5 · PROJECTS ══════════════════ -->
+    <!-- ══════════════════ 5 · PERSONAL PROJECTS ══════════════════ -->
     <section id="s-projects" data-id="projects" class="section">
-      <div class="section__label"><span class="dot" /> 05 — Projects</div>
-      <SectionCard file="projects.ts" title="Selected Projects" hint="// projects.map()">
+      <div class="section__label"><span class="dot" /> 05 — Personal Projects</div>
+      <SectionCard file="projects.ts" title="Personal Projects" hint="// after-hours work">
+        <p class="lead">
+          A few things I build in my own time to explore new tools and ideas —
+          a complement to my professional work, not a substitute for it.
+        </p>
         <div class="proj-grid">
           <div
             v-for="(p, i) in projects"
@@ -301,7 +401,7 @@ onBeforeUnmount(() => {
             data-reveal
             :style="{ transitionDelay: i * 60 + 'ms' }"
           >
-            <ProjectCard :project="p" :index="i" />
+            <ProjectCard :project="p" />
           </div>
         </div>
       </SectionCard>
@@ -310,12 +410,12 @@ onBeforeUnmount(() => {
     <!-- ══════════════════ 6 · CONTACT ══════════════════ -->
     <section id="s-contact" data-id="contact" class="section section--last">
       <div class="section__label"><span class="dot" /> 06 — Contact</div>
-      <SectionCard file="contact.ts" title="Get In Touch" hint="// let's talk">
+      <SectionCard file="contact.sql" title="Get In Touch" hint="-- let's talk">
         <div class="contact" data-reveal>
-          <CodeBlock caption="// contact.ts">
-            <span class="cl"><span class="tok-key">function</span> <span class="tok-fn">hire</span><span class="tok-punct">(</span><span class="tok-prop">engineer</span><span class="tok-punct">) {</span></span>
-            <span class="cl"><span class="indent" /><span class="tok-key">return</span> <span class="tok-prop">engineer</span><span class="tok-punct">.</span><span class="tok-fn">ships</span><span class="tok-punct">(</span><span class="tok-str">"reliable software"</span><span class="tok-punct">)</span></span>
-            <span class="cl"><span class="tok-punct">}</span></span>
+          <CodeBlock caption="-- contact.sql">
+            <span class="cl"><span class="tok-key">INSERT INTO</span> <span class="tok-type">team</span> <span class="tok-punct">(</span><span class="tok-prop">engineer</span><span class="tok-punct">,</span> <span class="tok-prop">role</span><span class="tok-punct">)</span></span>
+            <span class="cl"><span class="tok-key">VALUES</span> <span class="tok-punct">(</span><span class="tok-str">'{{ profile.name }}'</span><span class="tok-punct">,</span> <span class="tok-str">'Senior Full Stack'</span><span class="tok-punct">);</span></span>
+            <span class="cl"><span class="tok-com">-- 1 row affected ✓</span></span>
           </CodeBlock>
 
           <p class="contact__msg">
@@ -344,10 +444,19 @@ onBeforeUnmount(() => {
         <span class="tok-com">// Built with Vue 3 + Vite · {{ new Date().getFullYear() }} {{ profile.name }}</span>
       </footer>
     </section>
+    </div>
   </AppShell>
+
+  <CommandPalette v-model:open="paletteOpen" :commands="commands" />
 </template>
 
 <style scoped>
+/* Comfortable centered reading column inside the editor pane. */
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+}
+
 .lead {
   font-size: 1rem;
   color: var(--fg-muted);
@@ -356,29 +465,107 @@ onBeforeUnmount(() => {
   line-height: 1.7;
 }
 
+/* Profile header cluster: avatar + name + role */
+.hero__head {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  margin-bottom: 1.25rem;
+}
+
+/* Right column: code panel + the call-to-action buttons stacked beneath it. */
+.hero__code {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+/* Hero avatar (drop a photo at public/ and set profile.avatar to show it). */
+.hero__avatar {
+  width: 74px;
+  height: 74px;
+  flex: none;
+  border-radius: var(--radius-lg);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 1.5rem;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--accent-teal));
+  box-shadow: 0 6px 18px var(--accent-glow);
+  letter-spacing: 0.02em;
+  overflow: hidden;
+}
+.hero__avatar img { width: 100%; height: 100%; object-fit: cover; }
+.hero__headtext { min-width: 0; }
+
+/* Availability + at-a-glance meta row */
+.hero__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.55rem 0.9rem;
+  font-size: 0.8rem;
+  margin-bottom: 1.6rem;
+}
+.hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--accent-teal);
+  border: 1px solid var(--accent-teal-border);
+  background: var(--accent-teal-soft);
+  padding: 0.24rem 0.65rem;
+  border-radius: 999px;
+  font-weight: 500;
+}
+.hero__pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-teal);
+  animation: pulse 2.2s var(--ease) infinite;
+}
+.hero__meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--fg-dim);
+}
+.hero__meta-item svg { width: 13px; height: 13px; flex: none; }
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(78, 201, 176, 0.5); }
+  70% { box-shadow: 0 0 0 7px rgba(78, 201, 176, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(78, 201, 176, 0); }
+}
+
 /* ── HERO ──────────────────────────────────────────────────────────────── */
-.hero { margin-bottom: 3.75rem; }
+.hero { margin-bottom: 5rem; padding-top: 0.5rem; }
 .hero__grid {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 2.5rem;
-  align-items: center;
+  align-items: start;
 }
 .hero__name {
   font-family: var(--font-ui);
-  font-size: clamp(2.4rem, 5.5vw, 3.8rem);
+  font-size: clamp(2rem, 4.8vw, 3rem);
   font-weight: 800;
-  line-height: 1.02;
+  line-height: 1.05;
   letter-spacing: -0.03em;
   color: var(--fg-bright);
-  margin: 0.5rem 0 0.85rem;
+  margin: 0;
 }
 .hero__caret {
   color: var(--accent);
   font-weight: 400;
   animation: caret 1.1s steps(1) infinite;
 }
-.hero__role { font-size: 1rem; margin-bottom: 1.25rem; }
+.hero__role {
+  font-size: 0.95rem;
+  color: var(--accent-teal);
+  margin-top: 0.35rem;
+}
 .hero__summary {
   font-size: 1.05rem;
   color: var(--fg-muted);
@@ -402,7 +589,12 @@ onBeforeUnmount(() => {
 }
 .stat__lbl { font-size: 0.78rem; color: var(--fg-dim); line-height: 1.35; }
 
-.hero__cta { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+.hero__cta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.9rem;
+}
+.hero__cta .btn { justify-content: center; }
 
 /* ── STACK ─────────────────────────────────────────────────────────────── */
 .stack-grid {
@@ -557,8 +749,8 @@ onBeforeUnmount(() => {
   align-items: flex-start;
   padding: 1.1rem 1.25rem;
   border-radius: var(--radius);
-  border: 1px solid rgba(78, 201, 176, 0.3);
-  background: rgba(78, 201, 176, 0.07);
+  border: 1px solid var(--accent-teal-border);
+  background: var(--accent-teal-soft);
 }
 .ai__note-icon { width: 18px; height: 18px; color: var(--accent-teal); flex: none; margin-top: 3px; }
 .ai__note p { font-size: 0.95rem; color: var(--fg); line-height: 1.7; }

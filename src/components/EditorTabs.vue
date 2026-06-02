@@ -1,9 +1,15 @@
 <script setup>
 defineProps({
-  tabs: { type: Array, required: true }, // [{ id, file }]
+  tabs: { type: Array, required: true }, // [{ id, file, lang }]
   active: { type: String, default: '' },
 })
 defineEmits(['select'])
+
+const langClass = {
+  'C#': 'tab__lang--cs',
+  SQL: 'tab__lang--sql',
+  TS: 'tab__lang--ts',
+}
 </script>
 
 <template>
@@ -17,7 +23,9 @@ defineEmits(['select'])
       :aria-selected="active === t.id"
       @click="$emit('select', t.id)"
     >
-      <span class="tab__ts">TS</span>
+      <span class="tab__lang" :class="langClass[t.lang] ?? 'tab__lang--ts'">
+        {{ t.lang }}
+      </span>
       <span class="tab__name">{{ t.file }}</span>
       <span class="tab__dot" aria-hidden="true" />
     </button>
@@ -61,15 +69,17 @@ defineEmits(['select'])
   background: var(--accent);
 }
 
-.tab__ts {
+.tab__lang {
   font-size: 0.62rem;
   font-weight: 700;
-  color: var(--syn-keyword);
-  background: rgba(86, 156, 214, 0.16);
   border-radius: 3px;
   padding: 0.05rem 0.28rem;
   letter-spacing: 0.04em;
+  flex: none;
 }
+.tab__lang--ts { color: var(--syn-keyword); background: rgba(86, 156, 214, 0.16); }
+.tab__lang--cs { color: var(--syn-control); background: rgba(197, 134, 192, 0.18); }
+.tab__lang--sql { color: var(--accent-amber); background: rgba(220, 220, 170, 0.16); }
 .tab__dot {
   width: 7px; height: 7px; border-radius: 50%;
   background: var(--fg-dim);
@@ -81,6 +91,6 @@ defineEmits(['select'])
 
 @media (max-width: 560px) {
   .tab { padding: 0.6rem 0.75rem; font-size: 0.78rem; }
-  .tab__ts { display: none; }
+  .tab__lang { display: none; }
 }
 </style>
