@@ -213,22 +213,6 @@ onBeforeUnmount(() => {
           </div>
 
           <p class="hero__summary">{{ profile.summary }}</p>
-
-          <div class="hero__stats">
-            <div class="stat">
-              <span class="stat__num mono">14+</span>
-              <span class="stat__lbl">years building<br />production systems</span>
-            </div>
-            <div class="stat">
-              <span class="stat__num mono">90%</span>
-              <span class="stat__lbl">max cut in API response<br />times, modernizing legacy .NET</span>
-            </div>
-            <div class="stat">
-              <span class="stat__num mono">5</span>
-              <span class="stat__lbl">developers led<br />as Team Lead</span>
-            </div>
-          </div>
-
         </div>
 
         <div class="hero__code reveal" style="animation-delay: 0.12s">
@@ -241,9 +225,26 @@ onBeforeUnmount(() => {
             <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Experience</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.experience }}"</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Email</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.email }}"</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Phone</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.phone }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span><span class="tok-punct">[]</span> <span class="tok-prop">CoreStack</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span></span>
+            <span class="cl"><span class="indent-2" /><span class="tok-punct">{</span> <span class="tok-str">"C#"</span><span class="tok-punct">,</span> <span class="tok-str">"ASP.NET Core"</span><span class="tok-punct">,</span> <span class="tok-str">"Entity Framework"</span><span class="tok-punct">,</span> <span class="tok-str">"SQL Server"</span> <span class="tok-punct">};</span></span>
             <span class="cl"><span class="indent" /><span class="tok-key">public bool</span> <span class="tok-prop">Available</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-key">true</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="tok-punct">}</span></span>
           </CodeBlock>
+
+          <div class="hero__stats">
+            <div class="stat">
+              <span class="stat__num mono">14+</span>
+              <span class="stat__lbl">years building<br />production systems</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num mono">90%</span>
+              <span class="stat__lbl">max cut in API response times,<br />modernizing legacy .NET</span>
+            </div>
+            <div class="stat">
+              <span class="stat__num mono">5</span>
+              <span class="stat__lbl">developers led<br />as Team Lead</span>
+            </div>
+          </div>
 
           <div class="hero__cta">
             <a class="btn btn--primary" :href="RESUME_URL" target="_blank" rel="noopener">
@@ -482,11 +483,13 @@ onBeforeUnmount(() => {
   margin-bottom: 1.25rem;
 }
 
-/* Right column: code panel + the call-to-action buttons stacked beneath it. */
+/* Right column: code panel, stats strip, and CTA buttons. It stretches to the
+   left column's height and distributes its blocks to avoid dead space. */
 .hero__code {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  justify-content: space-between;
 }
 /* Hero avatar (drop a photo at public/ and set profile.avatar to show it). */
 .hero__avatar {
@@ -554,7 +557,7 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: 1.05fr 0.95fr;
   gap: 2.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 .hero__name {
   font-family: var(--font-ui);
@@ -584,10 +587,13 @@ onBeforeUnmount(() => {
 }
 
 .hero__stats {
-  display: flex;
-  gap: 1.75rem;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  background: var(--bg-inset);
+  border: 1px solid var(--border-soft);
+  border-radius: var(--radius);
+  padding: 1.1rem 1.2rem;
 }
 .stat { display: flex; flex-direction: column; gap: 0.25rem; }
 .stat__num {
@@ -794,7 +800,7 @@ onBeforeUnmount(() => {
   .hero__grid { grid-template-columns: 1fr; gap: 1.75rem; }
 }
 @media (max-width: 560px) {
-  .hero__stats { gap: 1.25rem; }
+  .hero__stats { grid-template-columns: 1fr; gap: 1.1rem; }
   .stat__num { font-size: 1.55rem; }
   .tl-head { gap: 0.4rem; }
 }
