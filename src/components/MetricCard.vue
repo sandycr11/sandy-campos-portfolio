@@ -3,8 +3,9 @@ import { ref, onMounted, onBeforeUnmount } from 'vue'
 
 const props = defineProps({
   label: { type: String, required: true },
-  value: { type: Number, required: true }, // e.g. 2.5 -> "2.5x"
+  value: { type: Number, required: true }, // drives the bar fill (value / max)
   max: { type: Number, default: 4 },
+  display: { type: String, default: '' }, // shown text; falls back to "<value>x"
   delay: { type: Number, default: 0 },
 })
 
@@ -35,7 +36,7 @@ onBeforeUnmount(() => observer && observer.disconnect())
   <div ref="el" class="metric">
     <div class="metric__top">
       <span class="metric__label">{{ label }}</span>
-      <span class="metric__val mono">{{ value }}x</span>
+      <span class="metric__val mono">{{ display || `${value}x` }}</span>
     </div>
     <div class="metric__track">
       <div

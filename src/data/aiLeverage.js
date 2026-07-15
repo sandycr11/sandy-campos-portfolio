@@ -1,33 +1,40 @@
 export const aiLeverage = {
-  headline: 'AI-assisted engineer focused on increasing engineering leverage.',
+  headline: 'AI-assisted development to accelerate delivery and improve code quality.',
   philosophy: 'AI is an engineering multiplier, not a replacement for judgment.',
-  tools: ['ChatGPT', 'GitHub Copilot', 'Claude', 'OpenAI Codex', 'Cursor', 'OpenAI API'],
+  tools: ['GitHub Copilot', 'Claude', 'OpenAI Codex', 'Cursor', 'OpenAI API', 'n8n', 'Make'],
   useCases: [
-    'Debugging support',
-    'Refactoring ideas',
+    'Delivery acceleration',
+    'Refactoring',
     'Documentation',
     'Prompt engineering',
-    'Data extraction',
+    'Structured data extraction',
     'Workflow automation',
-    'Legacy code analysis',
-    'Feature planning',
+    'Legacy modernization support',
   ],
   impact: [
-    'Faster debugging',
-    'Faster documentation',
-    'Better structured data extraction',
-    'Faster personal project delivery',
-    'Improved iteration speed',
+    'Faster delivery',
+    'Improved code quality',
+    'Cleaner refactors',
+    'Better documentation',
+    'Automated manual workflows',
   ],
   note:
     'I use AI to explore options faster, reduce repetitive work, and validate ideas, while still reviewing, testing, and owning the final implementation.',
 }
 
-// Visual metric block — `value` drives the animated bar (relative to 4x max).
+// Impact metrics — real numbers from production work (see Experience section).
+// `value`/`max` drive the animated bar fill; `display` is the text shown.
 export const aiMetrics = [
-  { label: 'Debugging', value: 2.5 },
-  { label: 'Documentation', value: 3 },
-  { label: 'Data Extraction Workflows', value: 4 },
-  { label: 'Automation Workflows', value: 3 },
-  { label: 'Personal Project Velocity', value: 3 },
+  {
+    label: 'API response times — legacy .NET modernization',
+    display: 'up to −90%',
+    value: 90,
+    max: 100,
+  },
+  {
+    label: 'Manual tasks — bots & API integrations',
+    display: '10 min → seconds',
+    value: 96,
+    max: 100,
+  },
 ]

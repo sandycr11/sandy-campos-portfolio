@@ -4,21 +4,21 @@ export const projects = [
     name: 'ABAIntake',
     url: 'https://abaintake.com',
     description:
-      'ABA-therapy intake & case-management platform with AI-assisted extraction of structured data from clinical notes.',
-    stack: ['Nuxt 3', 'React', 'KeystoneJS', 'GraphQL', 'Prisma', 'OpenAI API'],
+      'ABA-therapy case-management platform — KeystoneJS v6 backend with Prisma, MySQL, and GraphQL, plus a Nuxt 3 frontend with authentication, session handling, and Apollo integration. OpenAI API workflows extract structured summaries from unstructured notes. Deployed on Linux with Apache reverse proxy and SSL.',
+    stack: ['KeystoneJS v6', 'Prisma', 'MySQL', 'GraphQL', 'Nuxt 3', 'OpenAI API'],
   },
   {
     name: 'SeOferta',
     url: 'https://seoferta.net',
     description:
-      'Deals & offers web platform with a REST API backend and a decoupled frontend, hosted on AWS.',
-    stack: ['Vue.js', 'Express.js', 'MongoDB', 'AWS'],
+      'Web platform with API-driven frontend/backend separation and reusable business logic — REST APIs, data models, and frontend workflows for listing and search. Deployed and hosted on AWS.',
+    stack: ['Express.js', 'MongoDB', 'Vue.js', 'REST APIs', 'AWS'],
   },
   {
-    name: 'BaratieApp',
-    url: 'https://baratieapp.com',
+    name: 'Unity 3D Games & AR',
+    url: '',
     description:
-      'Restaurant management suite — a Flutter mobile app, a Laravel API backend, and a Vue.js web app for orders and inventory.',
-    stack: ['Flutter', 'Laravel', 'Vue.js', 'REST APIs'],
+      'Interactive 3D games and augmented-reality applications built in C# with Unity 3D (2018 – 2020), integrating the Windows Kinect sensor for motion tracking and gesture-based interaction, with real-time image processing translating body movement into in-game controls.',
+    stack: ['C#', 'Unity 3D', 'Windows Kinect', 'AR'],
   },
 ]

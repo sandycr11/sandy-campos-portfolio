@@ -17,8 +17,11 @@ import { experience } from './data/experience.js'
 import { aiLeverage, aiMetrics } from './data/aiLeverage.js'
 import { projects } from './data/projects.js'
 
-// Resume path — drop resume.pdf into /public to make this live.
-const RESUME_URL = `${import.meta.env.BASE_URL}resume.pdf`
+// Resume path — the real CV lives at /public/Sandy_Campos_Resume.pdf.
+const RESUME_URL = `${import.meta.env.BASE_URL}Sandy_Campos_Resume.pdf`
+
+// "+1 305-807-7741" → "tel:+13058077741"
+const PHONE_HREF = `tel:${profile.phone.replace(/[^+\d]/g, '')}`
 
 // Code language shown per section: C# (Sandy's strongest stack) for backend /
 // profile / experience, TypeScript where the work is frontend / AI-flavored.
@@ -76,7 +79,7 @@ const commands = computed(() => [
     id: 'resume',
     group: 'Actions',
     label: 'Download résumé',
-    hint: 'resume.pdf',
+    hint: 'Sandy_Campos_Resume.pdf',
     icon: 'download',
     run: () => openExternal(RESUME_URL),
   },
@@ -99,12 +102,14 @@ const commands = computed(() => [
     run: () => openExternal(profile.linkedin),
   },
   {
-    id: 'github',
+    id: 'phone',
     group: 'Links',
-    label: 'Open GitHub',
-    hint: 'external',
-    icon: 'github',
-    run: () => openExternal(profile.github),
+    label: 'Call Sandy',
+    hint: profile.phone,
+    icon: 'phone',
+    run: () => {
+      window.location.href = PHONE_HREF
+    },
   },
 ])
 
@@ -215,12 +220,12 @@ onBeforeUnmount(() => {
               <span class="stat__lbl">years building<br />production systems</span>
             </div>
             <div class="stat">
-              <span class="stat__num mono">5</span>
-              <span class="stat__lbl">engineering<br />teams & companies</span>
+              <span class="stat__num mono">90%</span>
+              <span class="stat__lbl">max cut in API response<br />times, modernizing legacy .NET</span>
             </div>
             <div class="stat">
-              <span class="stat__num mono">∞</span>
-              <span class="stat__lbl">AI-assisted<br />workflows shipped</span>
+              <span class="stat__num mono">5</span>
+              <span class="stat__lbl">developers led<br />as Team Lead</span>
             </div>
           </div>
 
@@ -235,6 +240,7 @@ onBeforeUnmount(() => {
             <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Location</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.location }}"</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Experience</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.experience }}"</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Email</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.email }}"</span><span class="tok-punct">;</span></span>
+            <span class="cl"><span class="indent" /><span class="tok-key">public string</span> <span class="tok-prop">Phone</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-str">"{{ profile.phone }}"</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="indent" /><span class="tok-key">public bool</span> <span class="tok-prop">Available</span> <span class="tok-punct">{</span> <span class="tok-key">get;</span> <span class="tok-punct">} =</span> <span class="tok-key">true</span><span class="tok-punct">;</span></span>
             <span class="cl"><span class="tok-punct">}</span></span>
           </CodeBlock>
@@ -246,8 +252,8 @@ onBeforeUnmount(() => {
             <a class="btn" :href="profile.linkedin" target="_blank" rel="noopener">
               <Icon name="linkedin" /> LinkedIn
             </a>
-            <a class="btn" :href="profile.github" target="_blank" rel="noopener">
-              <Icon name="github" /> GitHub
+            <a class="btn" :href="PHONE_HREF">
+              <Icon name="phone" /> Call Me
             </a>
             <a class="btn" :href="`mailto:${profile.email}`">
               <Icon name="mail" /> Email Me
@@ -262,8 +268,9 @@ onBeforeUnmount(() => {
       <div class="section__label"><span class="dot" /> 02 — Tech Stack</div>
       <SectionCard file="TechStack.cs" title="Technical Stack" hint="// tools I reach for">
         <p class="lead">
-          A full-stack toolkit spanning backend services, modern frontends, data,
-          cloud, and AI tooling — chosen for reliability in production.
+          A C#-first toolkit — ASP.NET Core, Entity Framework, and SQL Server at
+          the core, complemented by modern JavaScript frontends, cloud, and AI
+          tooling, chosen for reliability in production.
         </p>
         <div class="stack-grid" data-reveal>
           <div v-for="cat in stackCats" :key="cat.key" class="stack-cat">
@@ -277,7 +284,7 @@ onBeforeUnmount(() => {
                 v-for="item in cat.items"
                 :key="item"
                 :label="item"
-                :tone="cat.key === 'ai' ? 'accent' : 'default'"
+                :tone="cat.key === 'aiAndAutomation' ? 'accent' : 'default'"
               />
             </div>
           </div>
@@ -339,7 +346,7 @@ onBeforeUnmount(() => {
           <div class="ai__metrics" data-reveal>
             <div class="ai__metrics-head">
               <span class="mono ai__sub">measuredImpact()</span>
-              <span class="ai__sub-note">relative to my prior baseline</span>
+              <span class="ai__sub-note">real numbers from production work</span>
             </div>
             <div class="ai__metrics-list">
               <MetricCard
@@ -347,6 +354,8 @@ onBeforeUnmount(() => {
                 :key="m.label"
                 :label="m.label"
                 :value="m.value"
+                :max="m.max"
+                :display="m.display"
                 :delay="i * 120"
               />
             </div>
@@ -414,13 +423,13 @@ onBeforeUnmount(() => {
         <div class="contact" data-reveal>
           <CodeBlock caption="-- contact.sql">
             <span class="cl"><span class="tok-key">INSERT INTO</span> <span class="tok-type">team</span> <span class="tok-punct">(</span><span class="tok-prop">engineer</span><span class="tok-punct">,</span> <span class="tok-prop">role</span><span class="tok-punct">)</span></span>
-            <span class="cl"><span class="tok-key">VALUES</span> <span class="tok-punct">(</span><span class="tok-str">'{{ profile.name }}'</span><span class="tok-punct">,</span> <span class="tok-str">'Senior Full Stack'</span><span class="tok-punct">);</span></span>
+            <span class="cl"><span class="tok-key">VALUES</span> <span class="tok-punct">(</span><span class="tok-str">'{{ profile.name }}'</span><span class="tok-punct">,</span> <span class="tok-str">'Senior .NET / Full Stack'</span><span class="tok-punct">);</span></span>
             <span class="cl"><span class="tok-com">-- 1 row affected ✓</span></span>
           </CodeBlock>
 
           <p class="contact__msg">
-            Open to senior full stack and backend-focused roles. The fastest way to
-            reach me is email — or grab the résumé below.
+            Open to senior .NET and full stack roles. The fastest way to reach me
+            is email — or grab the résumé below.
           </p>
 
           <div class="contact__cta">
@@ -433,8 +442,8 @@ onBeforeUnmount(() => {
             <a class="btn" :href="profile.linkedin" target="_blank" rel="noopener">
               <Icon name="linkedin" /> LinkedIn
             </a>
-            <a class="btn" :href="profile.github" target="_blank" rel="noopener">
-              <Icon name="github" /> GitHub
+            <a class="btn" :href="PHONE_HREF">
+              <Icon name="phone" /> {{ profile.phone }}
             </a>
           </div>
         </div>

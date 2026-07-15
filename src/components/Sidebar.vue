@@ -8,7 +8,10 @@ defineProps({
 })
 defineEmits(['navigate'])
 
-const quickStack = ['.NET', 'ASP.NET Core', 'Vue.js', 'Nuxt 3', 'Node.js', 'TypeScript', 'SQL Server', 'Azure', 'OpenAI API']
+const quickStack = ['C#', '.NET 6/7/8', 'ASP.NET Core', 'Entity Framework', 'SQL Server', 'Vue.js', 'Angular', 'TypeScript', 'Azure']
+
+// "+1 305-807-7741" → "tel:+13058077741"
+const phoneHref = `tel:${profile.phone.replace(/[^+\d]/g, '')}`
 const monogram = profile.name.split(' ').map((w) => w[0]).join('')
 </script>
 
@@ -32,6 +35,9 @@ const monogram = profile.name.split(' ').map((w) => w[0]).join('')
       </div>
       <a class="sb__meta-row sb__meta-row--link" :href="`mailto:${profile.email}`">
         <Icon name="mail" /><span>{{ profile.email }}</span>
+      </a>
+      <a class="sb__meta-row sb__meta-row--link" :href="phoneHref">
+        <Icon name="phone" /><span>{{ profile.phone }}</span>
       </a>
     </div>
 
@@ -67,11 +73,11 @@ const monogram = profile.name.split(' ').map((w) => w[0]).join('')
         <a class="sb__link" :href="profile.linkedin" target="_blank" rel="noopener">
           <Icon name="linkedin" /><span>LinkedIn</span><Icon name="external" class="sb__ext" />
         </a>
-        <a class="sb__link" :href="profile.github" target="_blank" rel="noopener">
-          <Icon name="github" /><span>GitHub</span><Icon name="external" class="sb__ext" />
-        </a>
         <a class="sb__link" :href="`mailto:${profile.email}`">
           <Icon name="mail" /><span>Email</span><Icon name="external" class="sb__ext" />
+        </a>
+        <a class="sb__link" :href="phoneHref">
+          <Icon name="phone" /><span>Call</span><Icon name="external" class="sb__ext" />
         </a>
       </div>
     </div>

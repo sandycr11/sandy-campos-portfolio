@@ -4,11 +4,11 @@ Project memory for **sandy-campos-portfolio**. This file gives context to Claude
 
 ## What this is
 
-A VS Code–inspired developer portfolio landing page for **Sandy Campos** (Senior Full Stack Software Engineer). It is a creative, extra professional landing page to send to recruiters — it is **NOT** a replacement for the traditional résumé, it complements it.
+A VS Code–inspired developer portfolio landing page for **Sandy Campos** (Senior .NET / Full Stack Software Engineer — C#-first narrative: C#, ASP.NET Core, Entity Framework, and SQL Server lead; the JavaScript stack complements). It is a creative, extra professional landing page to send to recruiters — it is **NOT** a replacement for the traditional résumé, it complements it.
 
 - **Live site:** https://sandycr11.github.io/sandy-campos-portfolio/
 - **Repo:** https://github.com/sandycr11/sandy-campos-portfolio
-- **Local path:** `C:\Users\sandy\Projects\sandy-campos-portfolio`
+- **Local path:** `C:\Users\sandy\Documents\Resume - Work\sandy-campos-portfolio`
 
 ## Tech stack
 
@@ -58,7 +58,8 @@ Components (`src/components/`):
 - `CodeBlock.vue` — code pane with auto-numbered gutter; counts slotted `.cl` lines
 - `SectionCard.vue` — editor "panel" wrapper with a file header
 - `SkillBadge.vue` — quoted-string style tech pill
-- `MetricCard.vue` — animated multiplier bar (fills on scroll into view; `max` defaults to 4)
+- `MetricCard.vue` — animated metric bar (fills on scroll into view; `max` defaults to 4;
+  optional `display` string overrides the default `<value>x` text)
 - `ProjectCard.vue` — project panel
 - `Icon.vue` — single inline-SVG icon component; add new icons as `<template v-else-if="name === '...'">`
 
@@ -83,12 +84,15 @@ IntersectionObservers: one for scroll-spy (active tab) and one for reveal-on-scr
 - Syntax colors come from `.tok-key`, `.tok-str`, `.tok-prop`, `.tok-fn`, `.tok-com`, `.tok-punct`, etc.
 - Keep it **recruiter-readable and professional** — premium/clean/technical, not a joke terminal.
 - Respect `prefers-reduced-motion` (already handled in `global.css`).
-- The résumé buttons point to `RESUME_URL` in `App.vue` → `${BASE_URL}resume.pdf`.
-  `public/resume.pdf` is currently a PLACEHOLDER — replace with the real CV (keep the filename).
+- The résumé buttons point to `RESUME_URL` in `App.vue` → `${BASE_URL}Sandy_Campos_Resume.pdf`
+  (the real CV at `public/Sandy_Campos_Resume.pdf` — the single source of truth for all site content).
+- Content rules from the résumé: NO PHP/Laravel mentions, NO GitHub profile links (repos are
+  private; keep LinkedIn, email, phone). The only metrics allowed on the site: team of 5
+  developers, API response times cut by up to 90%, manual tasks cut from up to 10 minutes
+  to seconds (plus the biographical "14+ years"). Do not add other numbers.
 
 ## TODO / open items
 
-- [ ] Replace `public/resume.pdf` with Sandy's real résumé.
 - [ ] (optional) Add a custom domain / OG preview image.
 
 ## Style preferences

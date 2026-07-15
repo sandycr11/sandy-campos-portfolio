@@ -1,6 +1,6 @@
 # sandy-campos-portfolio
 
-A VS Code–inspired developer portfolio landing page for **Sandy Campos**, Senior Full Stack Software Engineer. Built as a fast, fully static single page with Vue 3 + Vite — meant to live *alongside* a traditional résumé, not replace it.
+A VS Code–inspired developer portfolio landing page for **Sandy Campos**, Senior .NET / Full Stack Software Engineer. Built as a fast, fully static single page with Vue 3 + Vite — meant to live *alongside* a traditional résumé, not replace it.
 
 - Dark, editor-style theme (activity bar, sidebar explorer, file tabs, status bar)
 - Syntax-highlighted "source code" content blocks
@@ -42,9 +42,9 @@ Theme colors and fonts live in `src/styles/variables.css`.
 
 ### Résumé file
 
-The **Download Résumé** buttons point to `/resume.pdf`. A placeholder is included at
-`public/resume.pdf` so the button works out of the box — **replace it with your real
-résumé** (keep the same filename, or update `RESUME_URL` in `src/App.vue`).
+The **Download Résumé** buttons point to `/Sandy_Campos_Resume.pdf`, served from
+`public/Sandy_Campos_Resume.pdf`. To swap it, replace that file (keep the same
+filename, or update `RESUME_URL` in `src/App.vue`).
 
 ---
 
@@ -103,8 +103,8 @@ Then set **Settings → Pages → Source → Deploy from a branch → `gh-pages`
 
 ```
 public/
-  resume.pdf          # placeholder — replace with your résumé
-  .nojekyll           # tells Pages to serve files as-is
+  Sandy_Campos_Resume.pdf   # the résumé served by the download buttons
+  .nojekyll                 # tells Pages to serve files as-is
 src/
   components/         # AppShell, Sidebar, EditorTabs, CodeBlock, SectionCard,
                       # SkillBadge, MetricCard, ProjectCard, Icon
