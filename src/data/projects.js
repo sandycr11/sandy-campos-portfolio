@@ -8,13 +8,6 @@ export const projects = [
     stack: ['KeystoneJS v6', 'Prisma', 'MySQL', 'GraphQL', 'Nuxt 3', 'OpenAI API'],
   },
   {
-    name: 'SeOferta',
-    url: 'https://seoferta.net',
-    description:
-      'Web platform with API-driven frontend/backend separation and reusable business logic — REST APIs, data models, and frontend workflows for listing and search. Deployed and hosted on AWS.',
-    stack: ['Express.js', 'MongoDB', 'Vue.js', 'REST APIs', 'AWS'],
-  },
-  {
     name: 'Unity 3D Games & AR',
     url: '',
     description:
